@@ -323,6 +323,7 @@
     @apply h-full flex-col justify-between md:flex md:gap-4;
   }
 
+
   .sidebar-nav_elements {
     @apply hidden w-full flex-col items-start gap-2 md:flex;
   }
