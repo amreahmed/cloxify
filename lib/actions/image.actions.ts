@@ -10,7 +10,7 @@ import { v2 as cloudinary } from "cloudinary";
 import exp from "constants";
 
 const populateUser = (query: any) => {
-  return query.populate({ path: "author", model: User, select: "_id firstName lastName" });
+  return query.populate({ path: "author", model: User, select: "_id firstName lastName clerkId" });
 };
 
 export async function addImage({ image, userId, path }: AddImageParams) {
