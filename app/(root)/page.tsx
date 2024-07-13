@@ -1,5 +1,6 @@
 import { Collection } from '@/components/shared/Collection'
 import { navLinks } from '@/constants'
+import { getAllImages } from '@/lib/actions/image.actions'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -7,7 +8,7 @@ import React from 'react'
 const Home = ({ searchParams }: SearchParamProps) => {
   const page = Number(searchParams?.page) || 1;
   const searchQuery = (searchParams?.query as string) || '';
-  
+  const images = await getAllImages()
   return (
     <>
       <section className="home">
