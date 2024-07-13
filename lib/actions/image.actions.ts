@@ -82,47 +82,50 @@ export async function getAllImages({
 }: {
   limit?: number;
   page: number;
-  searchQuery: string;
+  searchQuery?: string;
 }) {
   try {
     await connectToDatabase();
+
     cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
       api_secret: process.env.CLOUDINARY_API_SECRET,
       secure: true,
     });
 
-    let expression = 'folder=cloxify'
+    let expression = "folder=imaginify";
 
     if (searchQuery) {
-      expression += ` AND ${searchQuery}`
+      expression += ` AND ${searchQuery}`;
     }
 
     const { resources } = await cloudinary.search.expression(expression).execute();
-    
+
     const resourceIds = resources.map((resource: any) => resource.public_id);
 
-    let query = {}
-    
+    let query = {};
+
     if (searchQuery) {
       query = {
         publicId: {
-          $in: resourceIds
-        }
-      }
+          $in: resourceIds,
+        },
+      };
     }
 
     const skipAmount = (Number(page) - 1) * limit;
-    const images = await populateUser(Image.find(query)).sort({ UpdatedAt: -1 }).skip(skipAmount).limit(limit);
+
+    const images = await populateUser(Image.find(query)).sort({ updatedAt: -1 }).skip(skipAmount).limit(limit);
+
     const totalImages = await Image.find(query).countDocuments();
     const savedImages = await Image.find().countDocuments();
 
     return {
       data: JSON.parse(JSON.stringify(images)),
-      totalPages: Math.ceil(totalImages / limit),
-      savedImages
-    }
+      totalPage: Math.ceil(totalImages / limit),
+      savedImages,
+    };
   } catch (error) {
     handleError(error);
   }
